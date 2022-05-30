@@ -15,6 +15,9 @@ services:
       - type: volume
         source: elasticsearch
         target: /usr/share/elasticsearch/data
+      - type: volume
+        source: certs
+        target: ${CERTS_DIR}
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -24,6 +27,17 @@ services:
       # Use single node discovery in order to disable production mode and avoid bootstrap checks
       # see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
+      xpack.license.self_generated.type: trial
+      xpack.security.enabled: true
+      xpack.security.http.ssl.enabled: true
+      xpack.security.http.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
+      xpack.security.http.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
+      xpack.security.http.ssl.certificate=: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
+      xpack.security.transport.ssl.enabled: true
+      xpack.security.transport.ssl.verification_mode: certificate 
+      xpack.security.transport.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
+      xpack.security.transport.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
+      xpack.security.transport.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
     networks:
       - elk
 
@@ -64,8 +78,16 @@ services:
         source: ./kibana/config/kibana.yml
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
+      - type: data
+        source: certs
+        target: /usr/share/kibana/config/certs
+      - type: data
+        source: kibanadata
+        target: /usr/share/kibana/data
     ports:
       - "5601:5601"
+    environment:
+      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: ${CERTS_DIR}/ca/ca.crt
     networks:
       - elk
     depends_on:
@@ -77,3 +99,4 @@ networks:
 
 volumes:
   elasticsearch:
+  kibanadata:
