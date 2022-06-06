@@ -1,8 +1,7 @@
 instances:
-  - name: elasticsearch
+  - name: ${Elasticsearch_node_name}
     dns:
-      - elasticsearch 
+      - ${Elasticsearch_node_name} 
       - localhost
     ip:
       - 127.0.0.1
-      - 192.168.70.50

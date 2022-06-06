@@ -7,13 +7,13 @@ services:
     command: >
       bash -c '
         if [[ ! -f /certs/bundle.zip ]]; then
-          bin/elasticsearch-certutil cert --silent --pem --in config/certificates/instances.yml -out /certs/bundle.zip;
+          bin/elasticsearch-certutil cert --silent --pem --in ./instances.yml -out /certs/bundle.zip;
           unzip /certs/bundle.zip -d /certs; 
         fi;
         chown -R 1000:0 /certs
       '
     user: "0"
     working_dir: /usr/share/elasticsearch
-    volumes: ['certs:/certs', '.:/usr/share/elasticsearch/config/certificates']
+    volumes: ['certs:/certs', '.:${CERTS_DIR}']
 
 volumes: {"certs"}
