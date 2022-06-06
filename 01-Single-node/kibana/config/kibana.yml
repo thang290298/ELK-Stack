@@ -4,7 +4,6 @@
 #
 server.name: kibana
 server.host: "0"
-elasticsearch.url: [ "https://elasticsearch:9200" ]
 elasticsearch.hosts: [ "https://elasticsearch:9200" ]
 elasticsearch.username: elastic
 xpack.monitoring.ui.container.elasticsearch.enabled: true

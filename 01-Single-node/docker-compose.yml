@@ -58,6 +58,9 @@ services:
         source: ./logstash/pipeline
         target: /usr/share/logstash/pipeline
         read_only: true
+      - type: bind
+        source: certs
+        target: /usr/share/logstash/certs
     ports:
       - "5000:5000/tcp"
       - "5000:5000/udp"
@@ -79,16 +82,16 @@ services:
         source: ./kibana/config/kibana.yml
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
-      - type: volume
+      - type: bind
         source: certs
-        target: ${CERTS_DIR}
+        target: /usr/share/kibana/config/certs
     ports:
       - "5601:5601"
     environment:
       elasticsearch.password: ${password_elasticsearch}
-      server.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
-      server.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
-      elasticsearch.ssl.certificateAuthorities: ${CERTS_DIR}/ca/ca.crt
+      server.ssl.certificate: config/certs/elasticsearch/elasticsearch.crt
+      server.ssl.key: config/certs/elasticsearch/elasticsearch.key
+      elasticsearch.ssl.certificateAuthorities: config/certs/ca/ca.crt
     networks:
       - elk
     depends_on:
