@@ -31,7 +31,7 @@ services:
       xpack.security.http.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
       xpack.security.http.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
       xpack.security.transport.ssl.enabled: true
-      xpack.security.transport.ssl.verification_mode: certificate 
+      xpack.security.transport.ssl.verification_mode: certificate
       xpack.security.transport.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
       xpack.security.transport.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
       xpack.security.transport.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
@@ -58,7 +58,7 @@ services:
         source: ./logstash/pipeline
         target: /usr/share/logstash/pipeline
         read_only: true
-      - type: bind
+      - type: volume
         source: certs
         target: /usr/share/logstash/certs
     ports:
@@ -82,16 +82,13 @@ services:
         source: ./kibana/config/kibana.yml
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
-      - type: bind
+      - type: volume
         source: certs
         target: /usr/share/kibana/config/certs
     ports:
       - "5601:5601"
     environment:
       elasticsearch.password: ${password_elasticsearch}
-      server.ssl.certificate: config/certs/elasticsearch/elasticsearch.crt
-      server.ssl.key: config/certs/elasticsearch/elasticsearch.key
-      elasticsearch.ssl.certificateAuthorities: config/certs/ca/ca.crt
     networks:
       - elk
     depends_on:
