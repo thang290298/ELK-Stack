@@ -6,7 +6,7 @@ services:
       context: elasticsearch/
       args:
         ELK_VERSION: $ELK_VERSION
-    container_name: ${Elasticsearch_node_name}
+    container_name: elasticsearch
     volumes:
       - type: bind
         source: ./elasticsearch/config/elasticsearch.yml
@@ -22,24 +22,24 @@ services:
       - "9200:9200"
       - "9300:9300"
     environment:
-      node.name: ${Elasticsearch_node_name}
+      node.name: elasticsearch
       ES_JAVA_OPTS: "-Xmx512m -Xms512m"
       ELASTIC_PASSWORD: ${password_elasticsearch}
       discovery.type: single-node
       xpack.security.http.ssl.enabled: true
-      xpack.security.http.ssl.key: ${CERTS_DIR}/${Elasticsearch_node_name}/${Elasticsearch_node_name}.key
+      xpack.security.http.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
       xpack.security.http.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
-      xpack.security.http.ssl.certificate: ${CERTS_DIR}/${Elasticsearch_node_name}/${Elasticsearch_node_name}.crt
+      xpack.security.http.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
       xpack.security.transport.ssl.enabled: true
       xpack.security.transport.ssl.verification_mode: certificate 
       xpack.security.transport.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
-      xpack.security.transport.ssl.certificate: ${CERTS_DIR}/${Elasticsearch_node_name}/${Elasticsearch_node_name}.crt
-      xpack.security.transport.ssl.key: ${CERTS_DIR}/${Elasticsearch_node_name}/${Elasticsearch_node_name}.key
+      xpack.security.transport.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
+      xpack.security.transport.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
       xpack.security.http.ssl.enabled: true
     networks:
       - elk
     healthcheck:
-      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://${Elasticsearch_node_name}:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://elasticsearch:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
       interval: 30s
       timeout: 10s
       retries: 5
@@ -62,7 +62,7 @@ services:
       - "5000:5000/tcp"
       - "5000:5000/udp"
     environment:
-      xpack.monitoring.elasticsearch.hosts: [ "https://${Elasticsearch_node_name}:9200" ]
+      xpack.monitoring.elasticsearch.hosts: [ "https://elasticsearch:9200" ]
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
       - elk
@@ -86,12 +86,12 @@ services:
     ports:
       - "5601:5601"
     environment:
-      elasticsearch.url: [ "https://${Elasticsearch_node_name}:9200" ]
-      elasticsearch.hosts: [ "https://${Elasticsearch_node_name}:9200" ]
+      elasticsearch.url: [ "https://elasticsearch:9200" ]
+      elasticsearch.hosts: [ "https://elasticsearch:9200" ]
       elasticsearch.username: elastic
       elasticsearch.password: ${password_elasticsearch}
-      server.ssl.certificate: ${CERTS_DIR}/${Elasticsearch_node_name}/${Elasticsearch_node_name}.crt
-      server.ssl.key: ${CERTS_DIR}/${Elasticsearch_node_name}/${Elasticsearch_node_name}.key
+      server.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
+      server.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
       elasticsearch.ssl.certificateAuthorities: ${CERTS_DIR}/ca/ca.crt
     networks:
       - elk
