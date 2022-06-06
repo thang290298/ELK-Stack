@@ -104,4 +104,6 @@ networks:
 
 volumes:
   elasticsearch:
+    driver: local
   certs:
+    driver: local
