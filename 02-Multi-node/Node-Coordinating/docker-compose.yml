@@ -1,0 +1,21 @@
+services:
+  elk-coordinating:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    container_name: elk-coordinating
+    volumes:
+      - ./elasticsearch-coordinating.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - coordinating-data:/usr/share/elasticsearch/data
+    environment:
+      ES_JAVA_OPTS: "-Xmx1g -Xms1g"
+      bootstrap.memory_lock: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    network_mode: "host"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+volumes:
+  coordinating-data:
+    driver: local

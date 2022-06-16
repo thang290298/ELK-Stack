@@ -1,0 +1,21 @@
+services:
+  elk-data3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    container_name: elk-data3
+    volumes:
+      - ./elasticsearch-data3.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - data3:/usr/share/elasticsearch/data
+    environment:
+      ES_JAVA_OPTS: "-Xmx1g -Xms1g"
+      bootstrap.memory_lock: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    network_mode: "host"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+volumes:
+  data3:
+    driver: local

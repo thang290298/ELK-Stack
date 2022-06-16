@@ -35,7 +35,6 @@ services:
       xpack.security.transport.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
       xpack.security.transport.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
       xpack.security.transport.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
-      xpack.security.http.ssl.enabled: true
     networks:
       - elk
     healthcheck:

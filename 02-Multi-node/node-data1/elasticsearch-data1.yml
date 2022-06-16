@@ -1,0 +1,18 @@
+---
+## Default Elasticsearch configuration from Elasticsearch base image.
+## https://github.com/elastic/elasticsearch/blob/master/distribution/docker/src/docker/config/elasticsearch.yml
+#
+cluster.name: cluster-elk
+node.name: elk-data1
+node.roles: [ data_hot, data_content, master ]
+network.host: 192.168.70.52
+http.port: 9200
+discovery.seed_hosts: ["elk-master", "elk-data1", "elk-data2", "elk-data3", "elk-ingest", "elk-cordinating", "elk-transform", "elk-machine-learning", "elk-remote"]
+discovery.zen.minimum_master_nodes: 2
+## X-Pack settings
+## see https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html
+#
+#xpack.license.self_generated.type: basic
+xpack.security.enabled: false
+xpack.monitoring.collection.enabled: true
+xpack.security.authc.api_key.enabled: true

@@ -1,0 +1,21 @@
+services:
+  elk-data2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    container_name: elk-data2
+    volumes:
+      - ./elasticsearch-data2.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - data2:/usr/share/elasticsearch/data
+    environment:
+      ES_JAVA_OPTS: "-Xmx1g -Xms1g"
+      bootstrap.memory_lock: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    network_mode: "host"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+volumes:
+  data2:
+    driver: local
