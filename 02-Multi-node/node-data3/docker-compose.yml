@@ -1,13 +1,21 @@
 services:
   elk-data3:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: elk-data3
     volumes:
-      - ./elasticsearch-data3.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - data3:/usr/share/elasticsearch/data
+      - type: bind
+        source: ./elasticsearch-data3.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        read_only: true
+      - type: volume
+        source: data3
+        target: /usr/share/elasticsearch/data
+      - type: volume
+        source: certs
+        target: /usr/share/elasticsearch/config/certificates
     environment:
-      ES_JAVA_OPTS: "-Xmx1g -Xms1g"
-      bootstrap.memory_lock: true
+      ES_JAVA_OPTS: "-Xmx2g -Xms2g"
+      ELASTIC_PASSWORD: ${password_elasticsearch}
     ulimits:
       memlock:
         soft: -1
@@ -18,4 +26,6 @@ services:
       - "9300:9300"
 volumes:
   data3:
+    driver: local
+  certs:
     driver: local

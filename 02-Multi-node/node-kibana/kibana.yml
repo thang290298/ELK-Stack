@@ -4,7 +4,7 @@
 #
 server.name: kibana
 server.host: "192.168.70.60"
-elasticsearch.hosts: [ "http://elk-cordinating:9200","http://elk-transform:9200","http://elk-remote:9200","http://elk-machine-learning:9200"]
+elasticsearch.hosts: [ "http://192.168.70.51:9200", "http://192.168.70.53:9200", "http://192.168.70.54:9200" ]
 #elasticsearch.username: elastic
 #elasticsearch.password: Password2022
 #server.ssl.enabled: true
