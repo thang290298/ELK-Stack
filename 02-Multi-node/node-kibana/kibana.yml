@@ -4,12 +4,13 @@
 #
 server.name: kibana
 server.host: "192.168.70.60"
-elasticsearch.hosts: [ "http://192.168.70.51:9200", "http://192.168.70.53:9200", "http://192.168.70.54:9200" ]
-#elasticsearch.username: elastic
-#elasticsearch.password: Password2022
-#server.ssl.enabled: true
-#server.ssl.certificate: /usr/share/kibana/config/certs/elasticsearch/elasticsearch.crt
-#server.ssl.key: /usr/share/kibana/config/certs/elasticsearch/elasticsearch.key
-#elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/config/certs/ca/ca.crt
-#xpack.monitoring.ui.container.elasticsearch.enabled: true
+elasticsearch.hosts: [ "https://192.168.70.51:9200" ]
+elasticsearch.username: elastic
+elasticsearch.password: Password2022
+server.ssl.enabled: true
+elasticsearch.ssl.verificationMode: certificate
+server.ssl.certificate: /usr/share/kibana/config/certs/elk-luster/elk-luster.crt
+server.ssl.key: /usr/share/kibana/config/certs/elk-luster/elk-luster.key
+elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/config/certs/ca/ca.crt
+xpack.monitoring.ui.container.elasticsearch.enabled: true
 ## X-Pack security credentials
