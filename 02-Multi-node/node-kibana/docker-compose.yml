@@ -1,11 +1,13 @@
 version: '3.3'
-
 services:
   kibana:
     image: docker.elastic.co/kibana/kibana:7.16.2
     container_name: kibana
     volumes:
-      - ./kibana.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:rw
+      - /certs:/usr/share/kibana/config/certs:ro
+    environment:
+      elasticsearch.password: ${password_elasticsearch}
     network_mode: "host"
     ports:
       - "5601:5601"
