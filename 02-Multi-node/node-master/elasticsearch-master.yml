@@ -10,6 +10,8 @@ http.port: 9200
 discovery.seed_hosts: ["elk-master", "elk-data1", "elk-data2", "elk-data3", "elk-ingest", "elk-cordinating", "elk-transform", "elk-machine-learning", "elk-remote"]
 cluster.initial_master_nodes: ["elk-master", "elk-data1", "elk-data2"]
 discovery.zen.minimum_master_nodes: 2
+elasticsearch.username: elastic
+elasticsearch.password: Password2022
 ## X-Pack settings
 ## see https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html
 #
