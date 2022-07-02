@@ -1,0 +1,9 @@
+10.10.10.10 elk-master
+10.10.10.11 elk-data01
+10.10.10.12 elk-data02
+10.10.10.13 elk-data03
+10.10.10.14 elk-cordinating01
+10.10.10.15 elk-cordinating02
+10.10.10.16 elk-cordinating03
+10.10.10.20 IPVIP-local
+192.168.70.63 IPVIP-public
