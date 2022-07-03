@@ -4,4 +4,9 @@
 #
 server.name: elk-kibana02
 server.host: "0.0.0.0"
-elasticsearch.hosts: ["http://IPVIP-local:9201"]
+elasticsearch.hosts: [ "https://IPVIP-local:9201" ]
+server.ssl.enabled: true
+server.ssl.certificate: /usr/share/kibana/config/certs/elasticsearch/elasticsearch.crt
+server.ssl.key: /usr/share/kibana/config/certs/elasticsearch/elasticsearch.key
+elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/config/certs/ca/ca.crt
+xpack.monitoring.ui.container.elasticsearch.enabled: true

@@ -1,42 +1,54 @@
-version: '3.3'
+version: '2.2'
 services:
   elk-coordinating03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
     container_name: elk-coordinating03
     volumes:
       - ./elasticsearch-elk-coordinating03.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-      - /elk-coordinating03/data/:/usr/share/elasticsearch/data:rw
-      - /elk-coordinating03/logs/:/usr/share/elasticsearch/logs:rw
+      - ${ES_DATA}:/usr/share/elasticsearch/data:rw
+      - ${ES_LOGS}:/usr/share/elasticsearch/log:rw
+      - ${PATH_REPO}:/usr/share/elasticsearch/snapshots:rw
+      - ${CERTS_DIR}:/usr/share/elasticsearch/config/certs:ro
+    ports:
+      - ${ES_PORT}:${ES_PORT}
+      - ${ES_TRANSPORT_PORT}:${ES_TRANSPORT_PORT}
     environment:
-      ES_JAVA_OPTS: "-Xmx2g -Xms2g"
+      - cluster.name=${CLUSTER_NAME}
+      - ELASTIC_PASSWORD=${PASS_ELASTIC}
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xmx2g -Xms2g
     ulimits:
       memlock:
         soft: -1
         hard: -1
     network_mode: "host"
-    ports:
-      - "9200:9200"
-      - "9300:9300"
   elk-logstash03:
-    image: docker.elastic.co/logstash/logstash:7.16.2
+    image: docker.elastic.co/logstash/logstash:${ELK_VERSION}
     container_name: elk-logstash03
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ${CERTS_DIR}:/usr/share/logstash/certs:ro
     ports:
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
+      - "${LOGSTASH_PORT}:${LOGSTASH_PORT}/tcp"
+      - "${LOGSTASH_PORT}:${LOGSTASH_PORT}/udp"
     environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      - LS_JAVA_OPTS=-Xmx256m -Xms256m
     network_mode: "host"
 
   elk-kibana03:
-    image: docker.elastic.co/kibana/kibana:7.16.2
+    image: docker.elastic.co/kibana/kibana:${ELK_VERSION}
     container_name: elk-kibana03
     volumes:
       - ./elk-kibana03.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ${KIBANA_DIR}:/usr/share/kibana/data:rw
+      - ${CERTS_DIR}:/usr/share/kibana/config/certs:ro
+    environment:
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${PASS_KIBANA}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
     ports:
-      - "5601:5601"
+      - "${KIBANA_PORT}:${KIBANA_PORT}"
     network_mode: "host"
   keepalived-haproxy03:
     image: pelin/haproxy-keepalived:v1.0.0
@@ -44,6 +56,7 @@ services:
     volumes:
       - ./keepalived-haproxy/keepalived/:/etc/keepalived/
       - ./keepalived-haproxy/haproxy/:/usr/local/etc/haproxy/
+      - ${CERTS_DIR}:/etc/ssl/:ro
     restart: always
     network_mode: "host"
     privileged: true
