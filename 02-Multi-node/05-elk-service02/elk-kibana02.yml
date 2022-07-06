@@ -3,8 +3,8 @@
 ## https://github.com/elastic/kibana/blob/master/src/dev/build/tasks/os_packages/docker_generator/templates/kibana_yml.template.js
 #
 server.name: elk-kibana02
-server.host: "0.0.0.0"
-elasticsearch.hosts: [ "https://IPVIP-local:9201" ]
+server.host: "10.10.10.14"
+elasticsearch.hosts: [ "https://10.10.10.20:9201" ]
 server.ssl.enabled: true
 server.ssl.certificate: /usr/share/kibana/config/certs/elasticsearch/elasticsearch.crt
 server.ssl.key: /usr/share/kibana/config/certs/elasticsearch/elasticsearch.key

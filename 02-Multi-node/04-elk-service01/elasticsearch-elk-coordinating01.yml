@@ -4,8 +4,7 @@
 #
 node.name: elk-coordinating01
 node.roles: [ ]
-network.host: 0.0.0.0
-network.publish_host: 10.10.10.13
+network.host: 10.10.10.13
 http.port: 9200
 transport.port: 9300
 discovery.seed_hosts: ["elk-master01", "elk-master02", "elk-master03", "elk-data01", "elk-data02", "elk-coordinating01", "elk-coordinating02", "elk-coordinating03"]
