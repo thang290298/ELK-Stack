@@ -1,4 +1,4 @@
-version: '3.3'
+version: '2.2'
 
 services:
   elasticsearch:
@@ -8,40 +8,25 @@ services:
         ELK_VERSION: $ELK_VERSION
     container_name: elasticsearch
     volumes:
-      - type: bind
-        source: ./elasticsearch/config/elasticsearch.yml
-        target: /usr/share/elasticsearch/config/elasticsearch.yml
-        read_only: true
-      - type: volume
-        source: elasticsearch
-        target: /usr/share/elasticsearch/data
-      - type: volume
-        source: certs
-        target: ${CERTS_DIR}
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:rw
+      - ${ES_DATA}:/usr/share/elasticsearch/data:rw
+      - ${ES_LOGS}:/usr/share/elasticsearch/logs:rw
+      - ${PATH_REPO}:/usr/share/elasticsearch/snapshots:rw
+      - ${CERTS_DIR}:/usr/share/elasticsearch/config/certs:ro
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - ${ES_PORT}:${ES_PORT}
+      - ${ES_TRANSPORT_PORT}:${ES_TRANSPORT_PORT}
     environment:
-      node.name: elasticsearch
-      ES_JAVA_OPTS: "-Xmx512m -Xms512m"
-      ELASTIC_PASSWORD: ${password_elasticsearch}
-      discovery.type: single-node
-      xpack.security.http.ssl.enabled: true
-      xpack.security.http.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
-      xpack.security.http.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
-      xpack.security.http.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
-      xpack.security.transport.ssl.enabled: true
-      xpack.security.transport.ssl.verification_mode: certificate
-      xpack.security.transport.ssl.certificate_authorities: ${CERTS_DIR}/ca/ca.crt
-      xpack.security.transport.ssl.certificate: ${CERTS_DIR}/elasticsearch/elasticsearch.crt
-      xpack.security.transport.ssl.key: ${CERTS_DIR}/elasticsearch/elasticsearch.key
-    networks:
-      - elk
-    healthcheck:
-      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://elasticsearch:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - cluster.name=${CLUSTER_NAME}
+      - ELASTIC_PASSWORD=${PASS_ELASTIC}
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xmx2g -Xms2g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    network_mode: "host"
+
   logstash:
     build:
       context: logstash/
@@ -49,24 +34,16 @@ services:
         ELK_VERSION: $ELK_VERSION
     container_name: logstash
     volumes:
-      - type: bind
-        source: ./logstash/config/logstash.yml
-        target: /usr/share/logstash/config/logstash.yml
-        read_only: true
-      - type: bind
-        source: ./logstash/pipeline
-        target: /usr/share/logstash/pipeline
-        read_only: true
-      - type: volume
-        source: certs
-        target: /usr/share/logstash/certs
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:rw
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ${CERTS_DIR}:/usr/share/logstash/certs:ro
     ports:
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
+      - "${LOGSTASH_PORT}:${LOGSTASH_PORT}/tcp"
+      - "${LOGSTASH_PORT}:${LOGSTASH_PORT}/udp"
     environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    networks:
-      - elk
+      - LS_JAVA_OPTS=-Xmx256m -Xms256m
+    network_mode: "host"
+
     depends_on:
       - elasticsearch
 
@@ -77,28 +54,15 @@ services:
         ELK_VERSION: $ELK_VERSION
     container_name: kibana
     volumes:
-      - type: bind
-        source: ./kibana/config/kibana.yml
-        target: /usr/share/kibana/config/kibana.yml
-        read_only: true
-      - type: volume
-        source: certs
-        target: /usr/share/kibana/config/certs
-    ports:
-      - "5601:5601"
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ${KIBANA_DIR}:/usr/share/kibana/data:rw
+      - ${CERTS_DIR}:/usr/share/kibana/config/certs:ro
     environment:
-      elasticsearch.password: ${password_elasticsearch}
-    networks:
-      - elk
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${PASS_KIBANA}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+    ports:
+      - "${KIBANA_PORT}:${KIBANA_PORT}"
+    network_mode: "host"
     depends_on:
       - elasticsearch
-
-networks:
-  elk:
-    driver: bridge
-
-volumes:
-  elasticsearch:
-    driver: local
-  certs:
-    driver: local

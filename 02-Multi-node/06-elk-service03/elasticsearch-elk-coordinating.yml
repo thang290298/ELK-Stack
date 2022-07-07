@@ -12,7 +12,7 @@ discovery.seed_hosts: ["elk-master01", "elk-master02", "elk-master03", "elk-data
 cluster.initial_master_nodes: ["elk-master01", "elk-master02", "elk-master03"]
 bootstrap.memory_lock: true
 path.data: /usr/share/elasticsearch/data
-path.logs: /usr/share/elasticsearch/log
+path.logs: /usr/share/elasticsearch/logs
 path.repo: /usr/share/elasticsearch/snapshots
 xpack.security.enabled: true
 xpack.security.http.ssl.enabled: true

@@ -6,7 +6,7 @@ services:
     volumes:
       - ./elasticsearch-elk-master02.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
       - ${ES_DATA}:/usr/share/elasticsearch/data:rw
-      - ${ES_LOGS}:/usr/share/elasticsearch/log:rw
+      - ${ES_LOGS}:/usr/share/elasticsearch/logs:rw
       - ${PATH_REPO}:/usr/share/elasticsearch/snapshots:rw
       - ${CERTS_DIR}:/usr/share/elasticsearch/config/certs:ro
     ports:

@@ -12,7 +12,3 @@ server.ssl.certificate: /usr/share/kibana/config/certs/elasticsearch/elasticsear
 server.ssl.key: /usr/share/kibana/config/certs/elasticsearch/elasticsearch.key
 elasticsearch.ssl.certificateAuthorities: /usr/share/kibana/config/certs/ca/ca.crt
 xpack.monitoring.ui.container.elasticsearch.enabled: true
-## X-Pack security credentials
-xpack.encryptedSavedObjects.encryptionKey: 77bdc0739dc27b7122ae6fc4f80da187
-xpack.reporting.encryptionKey: 6030a831017c11aeaa4ab5de4b8727ef
-xpack.security.encryptionKey: ab48147dc67e26e491c0cafd4660ad10
