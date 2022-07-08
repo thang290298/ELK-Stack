@@ -17,7 +17,6 @@ services:
       - ${ES_PORT}:${ES_PORT}
       - ${ES_TRANSPORT_PORT}:${ES_TRANSPORT_PORT}
     environment:
-      - cluster.name=${CLUSTER_NAME}
       - ELASTIC_PASSWORD=${PASS_ELASTIC}
       - bootstrap.memory_lock=true
       - ES_JAVA_OPTS=-Xmx2g -Xms2g

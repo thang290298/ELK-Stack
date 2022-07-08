@@ -2,7 +2,9 @@
 ## Default Elasticsearch configuration from Elasticsearch base image.
 ## https://github.com/elastic/elasticsearch/blob/master/distribution/docker/src/docker/config/elasticsearch.yml
 #
+node.name: elasticsearch
 network.host: 0.0.0.0
+discovery.type: single-node
 bootstrap.memory_lock: true
 path.data: /usr/share/elasticsearch/data
 path.logs: /usr/share/elasticsearch/logs
